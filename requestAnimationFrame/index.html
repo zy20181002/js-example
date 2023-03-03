@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>requestAnimationFrame</title>
+    <style>
+      .dot,
+      .dot1 {
+        width: 140px;
+        height: 140px;
+        background-color: red;
+        border-radius: 50%;
+      }
+      .dot1 {
+        background-color: blue;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dot"></div>
+    <div class="dot1"></div>
+    <button onclick="startMove()">开始动画</button>
+  </body>
+  <script>
+    // 使用setInterval
+    function setIntervalMove() {
+      const element = document.querySelector(".dot");
+      let start = 10;
+      const timer = setInterval(function () {
+        if (start >= 1000) {
+          clearInterval(timer);
+          return;
+        }
+        element.style.transform = `translateX(${start}px)`;
+        start += 10;
+      }, 10);
+    }
+
+    // 使用requestAnimationFrame
+    function requestAnimationMove() {
+      let start = 10;
+      const element = document.querySelector(".dot1");
+      const move = () => {
+        if (start < 1000) {
+          window.requestAnimationFrame(move);
+        }
+        element.style.transform = `translateX(${start}px)`;
+        start += 10;
+      };
+      window.requestAnimationFrame(move);
+    }
+
+    // 开始动画
+    function startMove() {
+      setIntervalMove();
+      requestAnimationMove();
+    }
+  </script>
+</html>
