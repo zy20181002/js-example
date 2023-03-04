@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>图片裁剪</title>
+    <style>
+      .container {
+        display: flex;
+        flex-direction: column;
+      }
+      .preview {
+        width: 25vw;
+        height: 25vh;
+        position: relative;
+      }
+      .crop-content {
+        width: calc(25vw / 2);
+        height: calc(25vh / 2);
+        background-color: rgba(255, 255, 255, 0.435);
+        position: absolute;
+        top: 0;
+        left: 0;
+        transition: visibility 0.3s linear;
+      }
+
+      .picture-preview {
+        width: 25vw;
+        height: 25vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <input type="file" class="file" />
+      <div class="preview">
+        <img class="picture-preview" />
+        <div class="crop-content" draggable="true"></div>
+      </div>
+      <!-- <canvas
+        id="canvas-preview"
+        width="200px"
+        height="200px"
+        style="background-color: aliceblue"
+      ></canvas> -->
+    </div>
+  </body>
+  <script>
+    const fileNode = document.querySelector(".file");
+    const previewNode = document.querySelector(".preview");
+    const picturePreviewNode = document.querySelector(".picture-preview");
+    const cropContentNode = document.querySelector(".crop-content");
+    const canvasPreviewNode = document.querySelector("#canvas-preview");
+
+    previewNode.style.visibility = "hidden";
+    fileNode.addEventListener("change", function (event) {
+      const file = event.target.files[0];
+      createImgSrc(file);
+    });
+    // 绘制背景图
+    function createImgSrc(file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (e) => {
+        const result = e.target.result;
+        previewNode.style.visibility = "visible";
+        picturePreviewNode.src = result;
+        createCanvasPicture(result);
+      };
+    }
+    //   绘制canvas
+    function createCanvasPicture(img) {
+      const canvas = document.createElement("canvas");
+      canvas.width = "200px";
+      canvas.height = "200px";
+      canvas.style.background = "#000000";
+      const context = canvas.getContext("2d");
+      console.log("canvas", context);
+      context.drawImage(img, 20, 20, 20, 20, 40, 40);
+      document.body.appendChild(canvas);
+    }
+  </script>
+</html>
