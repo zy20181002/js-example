@@ -38,12 +38,6 @@
         <img class="picture-preview" />
         <div class="crop-content" draggable="true"></div>
       </div>
-      <!-- <canvas
-        id="canvas-preview"
-        width="200px"
-        height="200px"
-        style="background-color: aliceblue"
-      ></canvas> -->
     </div>
   </body>
   <script>
@@ -51,7 +45,6 @@
     const previewNode = document.querySelector(".preview");
     const picturePreviewNode = document.querySelector(".picture-preview");
     const cropContentNode = document.querySelector(".crop-content");
-    const canvasPreviewNode = document.querySelector("#canvas-preview");
 
     previewNode.style.visibility = "hidden";
     fileNode.addEventListener("change", function (event) {
@@ -66,18 +59,20 @@
         const result = e.target.result;
         previewNode.style.visibility = "visible";
         picturePreviewNode.src = result;
-        createCanvasPicture(result);
+        picturePreviewNode.onload = function () {
+          createCanvasPicture(picturePreviewNode);
+        };
       };
     }
     //   绘制canvas
     function createCanvasPicture(img) {
       const canvas = document.createElement("canvas");
-      canvas.width = "200px";
-      canvas.height = "200px";
-      canvas.style.background = "#000000";
-      const context = canvas.getContext("2d");
-      console.log("canvas", context);
-      context.drawImage(img, 20, 20, 20, 20, 40, 40);
+      const ctx = canvas.getContext("2d");
+      canvas.style.width = "25vw";
+      canvas.style.height = "25vh";
+      canvas.style.background = "#f9f9f0";
+      ctx.drawImage(img, 200, 200, 300, 300, 0, 0, 300, 300);
+
       document.body.appendChild(canvas);
     }
   </script>
