@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>file read</title>
+  </head>
+  <body>
+    <input type="file" id="file" name="file" multiple />
+  </body>
+  <script type="module">
+    const targetInput = document.querySelector("#file");
+
+    targetInput.addEventListener("change", function (e) {
+      readFile(e.target.files);
+    });
+    function readFile(files) {
+      console.log("processing started");
+      const bufferMap = new Map();
+      Object.entries(files).forEach(([k, file]) => {
+        const MAP_NAME = file.name.slice(0, file.name.indexOf("."));
+        // create file Map
+        const reader = new FileReader();
+        reader.readAsArrayBuffer(file);
+        reader.addEventListener("load", function (e) {
+          const result = e.target.result;
+          if (result) {
+            bufferMap.set(`${MAP_NAME}`, result);
+          }
+          console.log("end of processing", bufferMap);
+        });
+      });
+    }
+
+    function sliceFile(blob) {}
+  </script>
+</html>
