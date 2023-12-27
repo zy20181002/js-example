@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>intersectionObserver</title>
+    <style>
+        .container {
+            width: 400px;
+            height: 300px;
+            border: 1px solid #000;
+            background-color: antiquewhite;
+            overflow-y: auto;
+        }
+
+        .img-lazy {
+            width: 300px;
+            height: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+    </div>
+</body>
+<script>
+    const containerElement = document.querySelector('.container');
+
+    const imgs = [
+        'https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/26a0840b24f143178572486d4e7ee2e8~tplv-k3u1fbpfcp-jj-mark:3024:0:0:0:q75.awebp#?w=1000&h=500&s=49610&e=png&b=4ad5ff',
+        'https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9807fc4f14d74135b294203982c32d2e~tplv-k3u1fbpfcp-jj-mark:3024:0:0:0:q75.awebp#?w=788&h=414&s=234612&e=png&b=daf1fa',
+        'https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/03190d4441a249849269d58179715371~tplv-k3u1fbpfcp-jj-mark:3024:0:0:0:q75.awebp#?w=1200&h=630&s=147234&e=png&b=13040c',
+        'https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/67feb0fc22294e31922d71a754ebe867~tplv-k3u1fbpfcp-jj-mark:3024:0:0:0:q75.awebp#?w=620&h=399&s=32451&e=png&b=feffe6',
+        'https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bd912cb3933a469380f5797c392757cc~tplv-k3u1fbpfcp-jj-mark:3024:0:0:0:q75.awebp#?w=1280&h=720&s=109419&e=png&b=1a1c33',
+        'https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6bdc667e950c43fc89c10eff964b010f~tplv-k3u1fbpfcp-jj-mark:3024:0:0:0:q75.awebp#?w=1200&h=675&s=625051&e=png&b=fffefe',
+        'https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/75ae018bac164ab98fe5a28bbe38c22a~tplv-k3u1fbpfcp-jj-mark:3024:0:0:0:q75.awebp#?w=1200&h=730&s=184820&e=png&b=16a181'
+    ]
+
+    imgs.forEach(src => {
+        const imgElement = document.createElement('img')
+        imgElement.setAttribute('data-src', src)
+        imgElement.setAttribute('class', 'img-lazy')
+        containerElement.insertBefore(imgElement, containerElement.firstChild)
+    })
+
+
+
+    function init() {
+        console.log('=================> 初始化', containerElement.childNodes);
+        const childNodes = containerElement.childNodes
+        const childNodes_1 = childNodes[0]
+        const childNodes_2 = childNodes[1]
+
+        childNodes_1.setAttribute('src', childNodes_1.getAttribute('data-src'))
+        childNodes_2.setAttribute('src', childNodes_2.getAttribute('data-src'))
+
+    }
+    // init()
+
+    // 监听scroll
+    containerElement.addEventListener('scroll', lazyLoad)
+    function lazyLoad(e) {
+
+        const inElementContainer = new IntersectionObserver((entries) => {
+
+            entries.forEach(entery => {
+                const intersectionRect = entery.intersectionRect
+                const target = entery.target
+                if (intersectionRect.y > 0) {
+                    console.log('进入可视区域', target)
+                    target.setAttribute('src', target.getAttribute('data-src'))
+                    inElementContainer.unobserve(target)
+
+                }
+
+            })
+        }, {
+            root: containerElement,
+            rootMargin: '0px',
+            threshold: 0.5
+        })
+        containerElement.childNodes.forEach((element) => {
+            inElementContainer.observe(element)
+        })
+
+    }
+</script>
+
+</html>
